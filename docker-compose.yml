@@ -1,0 +1,34 @@
+version: '3'
+services:
+  simpleshortener:
+    image: robertobochet/simpleshortener
+    restart: always
+    env_file: .env
+    environment:
+      - SS_REDIS_URL=redis://redis:6379/0
+      - SS_REDIS_STATISTICS=redis://redis:6379/1
+    depends_on:
+      - redis
+    ports:
+      - "${SS_ENDPOINT:-127.0.0.1:7878}:7878/tcp"
+    networks:
+      simpleshortener:
+        ipv4_address: ${SS_NETWORK_IP_SS:-172.78.76.125}
+
+  redis:
+    image: redis:5-alpine
+    restart: always
+    entrypoint: redis-server --appendonly yes
+    volumes:
+      - ${SS_REDIS_DATA:-/srv/simpleshortener/redis}:/data
+    networks:
+      simpleshortener:
+        ipv4_address: ${SS_NETWORK_IP_REDIS:-172.78.76.45}
+
+networks:
+  simpleshortener:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${SS_NETWORK_SUBNET-172.78.76.0/24}
