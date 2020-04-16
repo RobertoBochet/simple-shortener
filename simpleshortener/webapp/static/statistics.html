@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui" name="viewport"/>
+
+	<title>Simple Shortener statistics</title>
+
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700,700i" rel="stylesheet" type="text/css"/>
+	<link href="./static/css/statistics.css" rel="stylesheet" type="text/css"/>
+
+	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="//unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+	<script src="//unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+	<script src="//cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+	<link href="//cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.css" rel="stylesheet">
+
+	<script src="//hacks.bluesmoon.info/strftime/strftime-min.js"></script>
+
+	<script src="./static/js/statistics.js" type="module"></script>
+</head>
+
+<header class="mdc-top-app-bar">
+	<div class="mdc-top-app-bar__row">
+		<section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+			<button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+			<span class="mdc-top-app-bar__title">Statistics</span>
+		</section>
+	</div>
+</header>
+
+<aside class="mdc-drawer mdc-drawer--modal">
+	<div class="mdc-drawer__content">
+		<nav class="mdc-list" id="target-url-list">
+			<a href="#"></a><!--workaround mdc bug-->
+			<a :key="url.url" class="mdc-list-item" href="#" v-for="url in targetUrl" v-on:click="click(url)">
+				<i aria-hidden="true" class="material-icons mdc-list-item__graphic">send</i>
+				<span class="mdc-list-item__text">{{url.url}}</span>
+			</a>
+		</nav>
+	</div>
+</aside>
+
+<div class="mdc-drawer-scrim"></div>
+
+<main class="main-content mdc-top-app-bar--fixed-adjust" id="main" v-show="targetUrl.metrics">
+	<h3>{{targetUrl.url}}</h3>
+
+	<div class="mdc-data-table">
+		<table class="mdc-data-table__table">
+			<thead>
+			<tr class="mdc-data-table__header-row">
+				<th class="mdc-data-table__header-cell mdc-data-table__header-cell--checkbox" role="columnheader"
+				    scope="col">
+					<div class="mdc-checkbox mdc-data-table__header-row-checkbox mdc-checkbox--selected">
+						<input aria-label="Checkbox for header row selection" class="mdc-checkbox__native-control"
+						       type="checkbox" v-model="isSelected" v-on:change="changeMain"/>
+						<div class="mdc-checkbox__background">
+							<svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
+								<path class="mdc-checkbox__checkmark-path" d="M1.73,12.91 8.1,19.28 22.79,4.59"
+								      fill="none"/>
+							</svg>
+							<div class="mdc-checkbox__mixedmark"></div>
+						</div>
+					</div>
+				</th>
+				<th class="mdc-data-table__header-cell" role="columnheader" scope="col">Short</th>
+				<th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader"
+				    scope="col">Visit
+				</th>
+				<th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader"
+				    scope="col">Per day
+				</th>
+			</tr>
+			</thead>
+
+			<tbody class="mdc-data-table__content" id="url-table">
+			<tr class="mdc-data-table__row" data-row-id="u0" v-for="url in targetUrl.shortUrl">
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;checkbox">
+					<div class="mdc-checkbox mdc-data-table__row-checkbox">
+						<input aria-labelledby="u0" class="mdc-checkbox__native-control" type="checkbox"
+						       v-model="url.isSelected" v-on:change="change(url)"/>
+						<div class="mdc-checkbox__background">
+							<svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
+								<path class="mdc-checkbox__checkmark-path" d="M1.73,12.91 8.1,19.28 22.79,4.59"
+								      fill="none"/>
+							</svg>
+							<div class="mdc-checkbox__mixedmark"></div>
+						</div>
+					</div>
+				</td>
+				<td class="mdc-data-table__cell">{{url.url}}</td>
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;numeric">{{url.metrics["total"]}}</td>
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;numeric">
+					{{url.metrics["per-day"].toFixed(3)}}
+				</td>
+			</tr>
+			<tr class="mdc-data-table__row" data-row-id="u0" v-if="targetUrl.metrics">
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;checkbox">
+					<div class="mdc-checkbox mdc-data-table__row-checkbox">
+						<input aria-labelledby="u0" class="mdc-checkbox__native-control" type="checkbox"
+						       v-model="targetUrl.isSelected" v-on:change="change(targetUrl)"/>
+						<div class="mdc-checkbox__background">
+							<svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
+								<path class="mdc-checkbox__checkmark-path" d="M1.73,12.91 8.1,19.28 22.79,4.59"
+								      fill="none"/>
+							</svg>
+							<div class="mdc-checkbox__mixedmark"></div>
+						</div>
+					</div>
+				</td>
+				<td class="mdc-data-table__cell">total</td>
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;numeric">{{targetUrl.metrics["total"]}}
+				</td>
+				<td class="mdc-data-table__cell mdc-data-table__cell&#45;&#45;numeric">
+					{{targetUrl.metrics["per-day"].toFixed(3)}}
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="chartUAContainer chartContainer">
+		<canvas class="chart" id="chart-ua"></canvas>
+	</div>
+	<div class="chartTimeContainer chartContainer">
+		<canvas class="chart" id="chart-time"></canvas>
+	</div>
+</main>
+</html>

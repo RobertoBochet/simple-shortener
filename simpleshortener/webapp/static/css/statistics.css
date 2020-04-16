@@ -1,0 +1,115 @@
+/*
+#main h2 {
+    text-align: center;
+}
+
+#main > div {
+    padding: 10px 20px;
+}
+
+#main h3 {
+    text-align: center;
+}
+
+#main .chartsContainer {
+}
+
+#main .chartContainer {
+    position: relative;
+    width: 100%;
+}
+
+
+@media only screen and (min-width: 800px) {
+    #main .chartsContainer {
+        display: flex;
+        align-items: stretch;
+    }
+
+    #main .chartContainer {
+        display: flex;
+        align-items: center;
+    }
+
+    #main .chartTimeContainer {
+        width: 70%;
+    }
+
+    #main .chartUAContainer {
+        width: 30%;
+    }
+}*/
+
+html, body {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", serif;
+}
+
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+}
+.app-bar {
+    position: absolute;
+}
+
+.mdc-top-app-bar {
+    z-index: 7;
+}
+
+.main-content {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mdc-data-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px;
+}
+.mdc-data-table__header-cell {
+    font-weight: bolder !important;
+}
+main > h3 {
+    width: 100%;
+    text-align: center;
+}
+
+.chartsContainer {
+}
+
+.chartContainer {
+    position: relative;
+    width: 100%;
+}
+
+@media only screen and (min-width: 800px) {
+    #main .chartsContainer {
+        display: flex;
+        align-items: stretch;
+    }
+
+    #main .chartContainer {
+        display: flex;
+        align-items: center;
+    }
+
+    #main .chartTimeContainer {
+        width: 70%;
+    }
+
+    #main .chartUAContainer {
+        width: 30%;
+    }
+}
